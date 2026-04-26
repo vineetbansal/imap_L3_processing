@@ -42,7 +42,8 @@ class SweProcessorIntegration(unittest.TestCase):
                 "v001",
                 "--dependency",
                 "imap_swe_l3_sci-e979d33c_20260120_v001.json",
-            ]
+            ],
+            env={**os.environ, "IMAP_DATA_DIR": str(root_dir / "data")},
         )
 
         self.assertEqual(0, result.returncode)
@@ -62,7 +63,6 @@ class SweProcessorIntegration(unittest.TestCase):
         for file in Path("tests/integration/test_data/swe").iterdir():
             if file.is_file():
                 input_files.append(file)
-        os.environ["IMAP_DATA_DIR"] = str(OUTPUT_DATA_DIR)
         with mock_imap_data_access(OUTPUT_DATA_DIR, input_files):
             result = subprocess.run(
                 [
@@ -81,6 +81,7 @@ class SweProcessorIntegration(unittest.TestCase):
                     "--dependency",
                     "imap_swe_l3_sci-e979d33c_20260120_v001.json",
                 ],
+                env={**os.environ, "IMAP_DATA_DIR": str(OUTPUT_DATA_DIR)}
             )
 
             self.assertEqual(0, result.returncode)
